@@ -1,0 +1,48 @@
+# Configuration file for extra200tomqtt.py
+# All fields are required unless specified otherwise
+
+mqtt:
+  # Enable/disable MQTT publishing
+  active: true
+  # MQTT broker ip/host/address
+  broker: "0.0.0.0"
+  # MQTT broker port
+  port: 1883
+  # MQTT username (optional, leave empty for no authentication)
+  username: "username"
+  # MQTT password (optional, leave empty for no authentication)
+  password: "password"
+  # Base topic for MQTT publishing
+  topic_base: "victron-battery-middleware"
+
+serial:
+  # Serial port path
+  port: "/dev/ttyUSB0"
+  # Frequency of data readings (seconds)
+  reading_freq: 1
+
+battery:
+
+  # List of battery addresses to query
+  # If you only have one battery - it should just be [1]
+  # you will need to set the 'dip switches' on your batteries to match these addresses
+
+  addresses: [1, 2, 3, 4, 5]
+  # Number of cells per battery (Pylontech Extra2000 has 15)
+  num_cells: 15
+  # Maximum charge voltage (volts, float voltage default)
+  max_charge_voltage: 51.0
+  # Maximum charge current per battery (amperes)
+  max_charge_current: 50.0
+  # Maximum discharge current per battery (amperes)
+  max_discharge_current: 50.0
+
+logging:
+  # Logging level (DEBUG, INFO, WARNING, ERROR)
+  level: DEBUG
+  # Path to log file (e.g., /tmp/log/battery_monitor.log for ramdisk)
+  file_path: "/opt/extra200tomqtt/ramdisk/battery_monitor.log"
+  # Maximum size of each log file (kilobytes)
+  file_max_size_kb: 1000
+  # Maximum number of log files to keep
+  file_max_files: 5

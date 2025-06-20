@@ -1,0 +1,2404 @@
+################################################################################################
+##                                      BATTERY 1
+################################################################################################
+
+- name: "SOC (kWh)"
+  unique_id: pylon_extra2000_battery_1_soc_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_1"
+  value_template: >
+    {% set soc_ah = value_json.Capacity | float(0) %}
+    {% set voltage = value_json.Dc.Voltage | float(0) %}
+    {% if soc_ah > 0 and voltage > 0 %}
+      {{ (soc_ah * voltage / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Capacity (kWh)"
+  unique_id: pylon_extra2000_battery_1_capacity_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_1"
+  value_template: >
+    {% set capacity_ah = value_json.InstalledCapacity | float(0) %}
+    {% if capacity_ah > 0 %}
+      {{ (capacity_ah * 48 / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Voltage"
+  unique_id: pylon_extra2000_battery_1_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Dc.Voltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Current"
+  unique_id: pylon_extra2000_battery_1_current
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "A"
+  value_template: "{{ value_json.Dc.Current }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Power"
+  unique_id: pylon_extra2000_battery_1_power
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "W"
+  value_template: "{{ value_json.Dc.Power }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "SOC"
+  unique_id: pylon_extra2000_battery_1_soc
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "%"
+  value_template: "{{ value_json.Soc | float(0) }}"
+  device_class: battery
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Installed Capacity"
+  unique_id: pylon_extra2000_battery_1_installed_capacity
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "Ah"
+  value_template: "{{ value_json.InstalledCapacity | float / 1.0 }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Remaining Capacity"
+  unique_id: pylon_extra2000_battery_1_remaining_capacity
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "Ah"
+  value_template: "{{ (value_json.Capacity | float) | round(2) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Full"
+  unique_id: pylon_extra2000_battery_1_time_until_full
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      {{ ((value_json.InstalledCapacity | float - value_json.Capacity | float) * 1000 / p) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Empty"
+  unique_id: pylon_extra2000_battery_1_time_until_empty
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p < 0 %}
+      {{ (value_json.Capacity | float * 1000 / (-1 * p)) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Charging Status"
+  unique_id: pylon_extra2000_battery_1_charging_status
+  state_topic: "victron-battery-middleware/battery_1"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      charging
+    {% elif p < 0 %}
+      discharging
+    {% else %}
+      idle
+    {% endif %}
+
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell11 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell11_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell11'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell12 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell12_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell12'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell13 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell13_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell13'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell14 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell14_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell14'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell15 Voltage"
+  unique_id: pylon_extra2000_battery_1_cell15_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell15'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell ID"
+  unique_id: pylon_extra2000_battery_1_min_cell_id
+  state_topic: "victron-battery-middleware/battery_1"
+  value_template: "{{ value_json.System.MinVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell Voltage"
+  unique_id: pylon_extra2000_battery_1_min_cell_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MinCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell ID"
+  unique_id: pylon_extra2000_battery_1_max_cell_id
+  state_topic: "victron-battery-middleware/battery_1"
+  value_template: "{{ value_json.System.MaxVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell Voltage"
+  unique_id: pylon_extra2000_battery_1_max_cell_voltage
+  state_topic: "victron-battery-middleware/battery_1"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MaxCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_1"]
+    name: "Pylon Extra2000 Battery 1"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+################################################################################################
+##                                      BATTERY 2
+################################################################################################
+
+- name: "SOC (kWh)"
+  unique_id: pylon_extra2000_battery_2_soc_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_2"
+  value_template: >
+    {% set soc_ah = value_json.Capacity | float(0) %}
+    {% set voltage = value_json.Dc.Voltage | float(0) %}
+    {% if soc_ah > 0 and voltage > 0 %}
+      {{ (soc_ah * voltage / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Capacity (kWh)"
+  unique_id: pylon_extra2000_battery_2_capacity_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_2"
+  value_template: >
+    {% set capacity_ah = value_json.InstalledCapacity | float(0) %}
+    {% if capacity_ah > 0 %}
+      {{ (capacity_ah * 48 / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Voltage"
+  unique_id: pylon_extra2000_battery_2_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Dc.Voltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Current"
+  unique_id: pylon_extra2000_battery_2_current
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "A"
+  value_template: "{{ value_json.Dc.Current }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Power"
+  unique_id: pylon_extra2000_battery_2_power
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "W"
+  value_template: "{{ value_json.Dc.Power }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "SOC"
+  unique_id: pylon_extra2000_battery_2_soc
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "%"
+  value_template: "{{ value_json.Soc | float(0) }}"
+  device_class: battery
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Installed Capacity"
+  unique_id: pylon_extra2000_battery_2_installed_capacity
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "Ah"
+  value_template: "{{ value_json.InstalledCapacity | float / 1.0 }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Remaining Capacity"
+  unique_id: pylon_extra2000_battery_2_remaining_capacity
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "Ah"
+  value_template: "{{ (value_json.Capacity | float) | round(2) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Full"
+  unique_id: pylon_extra2000_battery_2_time_until_full
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      {{ ((value_json.InstalledCapacity | float - value_json.Capacity | float) * 1000 / p) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Empty"
+  unique_id: pylon_extra2000_battery_2_time_until_empty
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p < 0 %}
+      {{ (value_json.Capacity | float * 1000 / (-1 * p)) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Charging Status"
+  unique_id: pylon_extra2000_battery_2_charging_status
+  state_topic: "victron-battery-middleware/battery_2"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      charging
+    {% elif p < 0 %}
+      discharging
+    {% else %}
+      idle
+    {% endif %}
+
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell11 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell11_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell11'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell12 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell12_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell12'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell13 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell13_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell13'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell14 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell14_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell14'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell15 Voltage"
+  unique_id: pylon_extra2000_battery_2_cell15_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell15'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell ID"
+  unique_id: pylon_extra2000_battery_2_min_cell_id
+  state_topic: "victron-battery-middleware/battery_2"
+  value_template: "{{ value_json.System.MinVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell Voltage"
+  unique_id: pylon_extra2000_battery_2_min_cell_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MinCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell ID"
+  unique_id: pylon_extra2000_battery_2_max_cell_id
+  state_topic: "victron-battery-middleware/battery_2"
+  value_template: "{{ value_json.System.MaxVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell Voltage"
+  unique_id: pylon_extra2000_battery_2_max_cell_voltage
+  state_topic: "victron-battery-middleware/battery_2"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MaxCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_2"]
+    name: "Pylon Extra2000 Battery 2"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+################################################################################################
+##                                      BATTERY 3
+################################################################################################
+
+- name: "SOC (kWh)"
+  unique_id: pylon_extra2000_battery_3_soc_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_3"
+  value_template: >
+    {% set soc_ah = value_json.Capacity | float(0) %}
+    {% set voltage = value_json.Dc.Voltage | float(0) %}
+    {% if soc_ah > 0 and voltage > 0 %}
+      {{ (soc_ah * voltage / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Capacity (kWh)"
+  unique_id: pylon_extra2000_battery_3_capacity_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_3"
+  value_template: >
+    {% set capacity_ah = value_json.InstalledCapacity | float(0) %}
+    {% if capacity_ah > 0 %}
+      {{ (capacity_ah * 48 / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Voltage"
+  unique_id: pylon_extra2000_battery_3_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Dc.Voltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Current"
+  unique_id: pylon_extra2000_battery_3_current
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "A"
+  value_template: "{{ value_json.Dc.Current }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Power"
+  unique_id: pylon_extra2000_battery_3_power
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "W"
+  value_template: "{{ value_json.Dc.Power }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "SOC"
+  unique_id: pylon_extra2000_battery_3_soc
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "%"
+  value_template: "{{ value_json.Soc | float(0) }}"
+  device_class: battery
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Installed Capacity"
+  unique_id: pylon_extra2000_battery_3_installed_capacity
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "Ah"
+  value_template: "{{ value_json.InstalledCapacity | float / 1.0 }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Remaining Capacity"
+  unique_id: pylon_extra2000_battery_3_remaining_capacity
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "Ah"
+  value_template: "{{ (value_json.Capacity | float) | round(2) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Full"
+  unique_id: pylon_extra2000_battery_3_time_until_full
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      {{ ((value_json.InstalledCapacity | float - value_json.Capacity | float) * 1000 / p) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Empty"
+  unique_id: pylon_extra2000_battery_3_time_until_empty
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p < 0 %}
+      {{ (value_json.Capacity | float * 1000 / (-1 * p)) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Charging Status"
+  unique_id: pylon_extra2000_battery_3_charging_status
+  state_topic: "victron-battery-middleware/battery_3"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      charging
+    {% elif p < 0 %}
+      discharging
+    {% else %}
+      idle
+    {% endif %}
+
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell11 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell11_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell11'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell12 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell12_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell12'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell13 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell13_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell13'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell14 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell14_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell14'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell15 Voltage"
+  unique_id: pylon_extra2000_battery_3_cell15_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell15'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell ID"
+  unique_id: pylon_extra2000_battery_3_min_cell_id
+  state_topic: "victron-battery-middleware/battery_3"
+  value_template: "{{ value_json.System.MinVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell Voltage"
+  unique_id: pylon_extra2000_battery_3_min_cell_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MinCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell ID"
+  unique_id: pylon_extra2000_battery_3_max_cell_id
+  state_topic: "victron-battery-middleware/battery_3"
+  value_template: "{{ value_json.System.MaxVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell Voltage"
+  unique_id: pylon_extra2000_battery_3_max_cell_voltage
+  state_topic: "victron-battery-middleware/battery_3"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MaxCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_3"]
+    name: "Pylon Extra2000 Battery 3"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+################################################################################################
+##                                      BATTERY 4
+################################################################################################
+
+- name: "SOC (kWh)"
+  unique_id: pylon_extra2000_battery_4_soc_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_4"
+  value_template: >
+    {% set soc_ah = value_json.Capacity | float(0) %}
+    {% set voltage = value_json.Dc.Voltage | float(0) %}
+    {% if soc_ah > 0 and voltage > 0 %}
+      {{ (soc_ah * voltage / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Capacity (kWh)"
+  unique_id: pylon_extra2000_battery_4_capacity_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_4"
+  value_template: >
+    {% set capacity_ah = value_json.InstalledCapacity | float(0) %}
+    {% if capacity_ah > 0 %}
+      {{ (capacity_ah * 48 / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Voltage"
+  unique_id: pylon_extra2000_battery_4_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Dc.Voltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Current"
+  unique_id: pylon_extra2000_battery_4_current
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "A"
+  value_template: "{{ value_json.Dc.Current }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Power"
+  unique_id: pylon_extra2000_battery_4_power
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "W"
+  value_template: "{{ value_json.Dc.Power }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "SOC"
+  unique_id: pylon_extra2000_battery_4_soc
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "%"
+  value_template: "{{ value_json.Soc | float(0) }}"
+  device_class: battery
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Installed Capacity"
+  unique_id: pylon_extra2000_battery_4_installed_capacity
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "Ah"
+  value_template: "{{ value_json.InstalledCapacity | float / 1.0 }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Remaining Capacity"
+  unique_id: pylon_extra2000_battery_4_remaining_capacity
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "Ah"
+  value_template: "{{ (value_json.Capacity | float) | round(2) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Full"
+  unique_id: pylon_extra2000_battery_4_time_until_full
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      {{ ((value_json.InstalledCapacity | float - value_json.Capacity | float) * 1000 / p) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Empty"
+  unique_id: pylon_extra2000_battery_4_time_until_empty
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p < 0 %}
+      {{ (value_json.Capacity | float * 1000 / (-1 * p)) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Charging Status"
+  unique_id: pylon_extra2000_battery_4_charging_status
+  state_topic: "victron-battery-middleware/battery_4"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      charging
+    {% elif p < 0 %}
+      discharging
+    {% else %}
+      idle
+    {% endif %}
+
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell11 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell11_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell11'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell12 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell12_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell12'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell13 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell13_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell13'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell14 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell14_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell14'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell15 Voltage"
+  unique_id: pylon_extra2000_battery_4_cell15_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell15'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell ID"
+  unique_id: pylon_extra2000_battery_4_min_cell_id
+  state_topic: "victron-battery-middleware/battery_4"
+  value_template: "{{ value_json.System.MinVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell Voltage"
+  unique_id: pylon_extra2000_battery_4_min_cell_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MinCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell ID"
+  unique_id: pylon_extra2000_battery_4_max_cell_id
+  state_topic: "victron-battery-middleware/battery_4"
+  value_template: "{{ value_json.System.MaxVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell Voltage"
+  unique_id: pylon_extra2000_battery_4_max_cell_voltage
+  state_topic: "victron-battery-middleware/battery_4"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MaxCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_4"]
+    name: "Pylon Extra2000 Battery 4"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+################################################################################################
+##                                      BATTERY 5
+################################################################################################
+
+- name: "SOC (kWh)"
+  unique_id: pylon_extra2000_battery_5_soc_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_5"
+  value_template: >
+    {% set soc_ah = value_json.Capacity | float(0) %}
+    {% set voltage = value_json.Dc.Voltage | float(0) %}
+    {% if soc_ah > 0 and voltage > 0 %}
+      {{ (soc_ah * voltage / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Capacity (kWh)"
+  unique_id: pylon_extra2000_battery_5_capacity_kwh
+  unit_of_measurement: "kWh"
+  device_class: energy
+  state_class: measurement
+  state_topic: "victron-battery-middleware/battery_5"
+  value_template: >
+    {% set capacity_ah = value_json.InstalledCapacity | float(0) %}
+    {% if capacity_ah > 0 %}
+      {{ (capacity_ah * 48 / 1000) | round(2) }}
+    {% else %}
+      unknown
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Voltage"
+  unique_id: pylon_extra2000_battery_5_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Dc.Voltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Current"
+  unique_id: pylon_extra2000_battery_5_current
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "A"
+  value_template: "{{ value_json.Dc.Current }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Power"
+  unique_id: pylon_extra2000_battery_5_power
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "W"
+  value_template: "{{ value_json.Dc.Power }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "SOC"
+  unique_id: pylon_extra2000_battery_5_soc
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "%"
+  value_template: "{{ value_json.Soc | float(0) }}"
+  device_class: battery
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Installed Capacity"
+  unique_id: pylon_extra2000_battery_5_installed_capacity
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "Ah"
+  value_template: "{{ value_json.InstalledCapacity | float / 1.0 }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Remaining Capacity"
+  unique_id: pylon_extra2000_battery_5_remaining_capacity
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "Ah"
+  value_template: "{{ (value_json.Capacity | float) | round(2) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Full"
+  unique_id: pylon_extra2000_battery_5_time_until_full
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      {{ ((value_json.InstalledCapacity | float - value_json.Capacity | float) * 1000 / p) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Time Until Empty"
+  unique_id: pylon_extra2000_battery_5_time_until_empty
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "h"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p < 0 %}
+      {{ (value_json.Capacity | float * 1000 / (-1 * p)) | round(2) }}
+    {% else %}
+      0
+    {% endif %}
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Charging Status"
+  unique_id: pylon_extra2000_battery_5_charging_status
+  state_topic: "victron-battery-middleware/battery_5"
+  value_template: >
+    {% set p = value_json.Dc.Power | float %}
+    {% if p > 0 %}
+      charging
+    {% elif p < 0 %}
+      discharging
+    {% else %}
+      idle
+    {% endif %}
+
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+
+- name: "Cell1 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell1_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell1'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell2 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell2_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell2'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell3 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell3_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell3'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell4 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell4_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell4'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell5 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell5_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell5'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell6 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell6_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell6'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell7 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell7_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell7'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell8 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell8_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell8'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell9 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell9_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell9'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell10 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell10_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell10'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell11 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell11_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell11'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell12 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell12_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell12'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell13 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell13_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell13'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell14 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell14_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell14'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Cell15 Voltage"
+  unique_id: pylon_extra2000_battery_5_cell15_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltages['Cell15'] | round(3) }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell ID"
+  unique_id: pylon_extra2000_battery_5_min_cell_id
+  state_topic: "victron-battery-middleware/battery_5"
+  value_template: "{{ value_json.System.MinVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Min Cell Voltage"
+  unique_id: pylon_extra2000_battery_5_min_cell_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MinCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell ID"
+  unique_id: pylon_extra2000_battery_5_max_cell_id
+  state_topic: "victron-battery-middleware/battery_5"
+  value_template: "{{ value_json.System.MaxVoltageCellId }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
+
+- name: "Max Cell Voltage"
+  unique_id: pylon_extra2000_battery_5_max_cell_voltage
+  state_topic: "victron-battery-middleware/battery_5"
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.System.MaxCellVoltage }}"
+  device:
+    identifiers: ["pylon_extra2000_battery_5"]
+    name: "Pylon Extra2000 Battery 5"
+    manufacturer: "PylonTech"
+    model: "Extra2000"
